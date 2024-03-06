@@ -1,0 +1,25 @@
+import hashlib
+
+def generate_colliding_messages():
+    # Generate two different messages
+    message1 = b"Message1"
+    message2 = b"Message2"
+
+    # Calculate MD5 hashes for both messages
+    hash1 = hashlib.md5(message1).hexdigest()
+    hash2 = hashlib.md5(message2).hexdigest()
+
+    return message1, message2, hash1, hash2
+
+def main():
+    # Generate messages with the same MD5 hash
+    message1, message2, hash1, hash2 = generate_colliding_messages()
+
+    # Print the messages and their corresponding MD5 hashes
+    print("Message 1:", message1)
+    print("MD5 Hash 1:", hash1)
+    print("\nMessage 2:", message2)
+    print("MD5 Hash 2:", hash2)
+
+if __name__ == "__main__":
+    main()
