@@ -1,0 +1,32 @@
+import hashlib
+
+def generate_mac(secret_key, message):
+    combined_message = secret_key + message
+    return hashlib.md5(combined_message.encode()).hexdigest()
+
+def verify_mac(secret_key, message, original_mac):
+    calculated_mac = generate_mac(secret_key, message)
+    return calculated_mac == original_mac
+
+def main():
+    secret_key = "secret_key"
+    message = "This is the original message."
+    original_mac = generate_mac(secret_key, message)
+
+    # Verify message integrity using the secret key and received message
+    if verify_mac(secret_key, message, original_mac):
+        print("Message integrity verified: MACs match.")
+    else:
+        print("Message integrity verification failed: MACs do not match.")
+
+    # Tamper with the message
+    tampered_message = "This is the tampered message."
+
+    # Verify integrity of tampered message
+    if verify_mac(secret_key, tampered_message, original_mac):
+        print("Tampered message integrity verified: MACs match.")
+    else:
+        print("Tampered message integrity verification failed: MACs do not match.")
+
+if __name__ == "__main__":
+    main()
