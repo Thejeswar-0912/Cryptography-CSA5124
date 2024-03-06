@@ -1,0 +1,14 @@
+import hashlib
+
+def calculate_md5_hash(message):
+    md5_hash = hashlib.md5()
+    md5_hash.update(message.encode())
+    return md5_hash.hexdigest()
+
+def main():
+    message = input("Enter the plaintext message: ")
+    md5_hash = calculate_md5_hash(message)
+    print("MD5 Hash:", md5_hash)
+
+if __name__ == "__main__":
+    main()
