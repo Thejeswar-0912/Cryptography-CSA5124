@@ -1,0 +1,50 @@
+pip install pycryptodome
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_OAEP
+from Crypto.Signature import pkcs1_15
+from Crypto.Hash import SHA256
+
+def generate_rsa_keys():
+    key = RSA.generate(2048)
+    return key.publickey(), key
+
+def encrypt_message(message, public_key):
+    cipher = PKCS1_OAEP.new(public_key)
+    return cipher.encrypt(message.encode())
+
+def decrypt_message(encrypted_message, private_key):
+    cipher = PKCS1_OAEP.new(private_key)
+    return cipher.decrypt(encrypted_message).decode()
+
+def sign_message(message, private_key):
+    hash_obj = SHA256.new(message.encode())
+    signer = pkcs1_15.new(private_key)
+    return signer.sign(hash_obj)
+
+def verify_signature(message, signature, public_key):
+    hash_obj = SHA256.new(message.encode())
+    verifier = pkcs1_15.new(public_key)
+    try:
+        verifier.verify(hash_obj, signature)
+        return True
+    except (ValueError, TypeError):
+        return False
+
+def main():
+    public_key_A, private_key_A = generate_rsa_keys()
+    public_key_B, private_key_B = generate_rsa_keys()
+
+    # Communication from A to B
+    message = "Hello, Party B!"
+    encrypted_message = encrypt_message(message, public_key_B)
+    decrypted_message = decrypt_message(encrypted_message, private_key_B)
+    print("Decrypted message at Party B:", decrypted_message)
+
+    # Communication from B to A (with digital signature)
+    message = "Hello, Party A!"
+    signature = sign_message(message, private_key_B)
+    is_verified = verify_signature(message, signature, public_key_B)
+    print("Signature verified at Party A:", is_verified)
+
+if __name__ == "__main__":
+    main()
