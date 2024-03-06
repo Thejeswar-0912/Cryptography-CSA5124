@@ -1,0 +1,17 @@
+import hashlib
+
+def generate_hash(message):
+    hash_value = hashlib.sha256(message.encode()).hexdigest()
+    return hash_value
+
+def main():
+    messages = [
+        "Hello, World!",
+    ]
+
+    for message in messages:
+        hash_value = generate_hash(message)
+        print(f"Message: {message}\nHash value: {hash_value}\n")
+
+if __name__ == "__main__":
+    main()
