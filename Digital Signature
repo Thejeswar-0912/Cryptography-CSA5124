@@ -1,0 +1,30 @@
+from Crypto.PublicKey import RSA
+from Crypto.Signature import pkcs1_15
+from Crypto.Hash import SHA256
+
+def generate_signature(private_key, message):
+    hash_message = SHA256.new(message.encode())
+    return pkcs1_15.new(private_key).sign(hash_message)
+
+def verify_signature(public_key, message, signature):
+    hash_message = SHA256.new(message.encode())
+    try:
+        pkcs1_15.new(public_key).verify(hash_message, signature)
+        return True
+    except (ValueError, TypeError):
+        return False
+
+def main():
+    key = RSA.generate(2048)
+    private_key = key.export_key()
+    public_key = key.publickey().export_key()
+    message = "This is the original message."
+    signature = generate_signature(private_key, message)
+
+    if verify_signature(public_key, message, signature):
+        print("Message authenticity verified: Digital signature is valid.")
+    else:
+        print("Message authenticity verification failed: Digital signature is not valid.")
+
+if __name__ == "__main__":
+    main()
